@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>MJJTI 六维人格测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{
+background:linear-gradient(135deg,#1a1a2e,#2c2c54);
+color:white;display:flex;justify-content:center;align-items:center;
+min-height:100vh;padding:20px;
+}
+.box{
+background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);
+padding:60px 40px;border-radius:24px;width:100%;max-width:550px;
+text-align:center;box-shadow:0 0 40px rgba(0,150,255,0.2);
+animation:fadeIn 1s;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1}}
+.logo{font-size:50px;margin-bottom:10px}
+h1{font-size:30px;margin-bottom:10px}
+.info{color:#aaa;margin-bottom:30px}
+.btn{
+background:linear-gradient(90deg,#4facfe,#00f2fe);
+color:white;border:none;padding:18px 30px;
+border-radius:14px;font-size:17px;width:100%;
+margin:8px 0;cursor:pointer;transition:.3s;
+}
+.btn:hover{transform:scale(1.03)}
+</style>
+</head>
+<body>
+<div class="box">
+<div class="logo">⚔️</div>
+<h1>MJJTI 人格测试</h1>
+<p class="info">6大维度 · 36题 · 64种人格 · 精准解析</p>
+<button class="btn" onclick="location.href='test.html'">开始测试</button>
+<button class="btn" onclick="location.href='match.html'">人格契合度匹配</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>MJJTI · 36题专业测试</title>
+<style>
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Microsoft YaHei",sans-serif;
+  }
+  body{
+    background:#f6f8fc;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+  }
+  .box{
+    background:white;
+    padding:40px 30px;
+    border-radius:20px;
+    max-width:500px;
+    width:100%;
+    box-shadow:0 8px 30px rgba(0,0,0,0.08);
+  }
+  .title{
+    font-size:22px;
+    margin-bottom:25px;
+    color:#222;
+    text-align:center;
+  }
+  .question{
+    font-size:17px;
+    margin-bottom:20px;
+    color:#333;
+    line-height:1.5;
+  }
+  .btn{
+    width:100%;
+    padding:16px;
+    margin:8px 0;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    background:#4a6cf7;
+    color:white;
+    cursor:pointer;
+  }
+  .btn:hover{
+    background:#3a5cec;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <div class="title" id="title">题目 1 / 36</div>
+  <div class="question" id="q">加载中...</div>
+  <button class="btn" onclick="ans(0)">A</button>
+  <button class="btn" onclick="ans(1)">B</button>
+</div>
+
+<script>
+// 36题 —— 6个维度，每个维度6题（最标准）
+const questions = [
+  // 维度1：能量 S / Q (6题)
+  { q:"聚会后你通常感觉？", a:"充满能量", b:"疲惫想独处", dim:0 },
+  { q:"你更擅长？", a:"主动聊天", b:"被动倾听", dim:0 },
+  { q:"空闲时你更喜欢？", a:"出门活动", b:"宅家休息", dim:0 },
+  { q:"在人群中你会？", a:"放松自在", b:"稍有压力", dim:0 },
+  { q:"你更愿意？", a:"成为焦点", b:"低调安静", dim:0 },
+  { q:"社交后你需要？", a:"不用恢复", b:"独处恢复", dim:0 },
+
+  // 维度2：认知 R / N (6题)
+  { q:"你更相信？", a:"亲眼所见", b:"直觉灵感", dim:1 },
+  { q:"学习时你更在意？", a:"实用步骤", b:"底层逻辑", dim:1 },
+  { q:"你更喜欢？", a:"现实具体", b:"抽象想象", dim:1 },
+  { q:"看未来你更关注？", a:"当下现实", b:"未来可能", dim:1 },
+  { q:"你更擅长？", a:"细节处理", b:"宏观思考", dim:1 },
+  { q:"你更喜欢？", a:"脚踏实地", b:"创意脑洞", dim:1 },
+
+  // 维度3：决策 L / F (6题)
+  { q:"做选择优先？", a:"逻辑道理", b:"感受心情", dim:2 },
+  { q:"吵架时你？", a:"讲道理", b:"顾情绪", dim:2 },
+  { q:"评价事物看？", a:"客观对错", b:"他人感受", dim:2 },
+  { q:"你更看重？", a:"公平合理", b:"人情温暖", dim:2 },
+  { q:"遇到问题？", a:"理性解决", b:"先顾心情", dim:2 },
+  { q:"你是？", a:"理智型", b:"感性型", dim:2 },
+
+  // 维度4：生活 P / U (6题)
+  { q:"你喜欢？", a:"计划安排", b:"随性自由", dim:3 },
+  { q:"日程被打乱？", a:"不舒服", b:"无所谓", dim:3 },
+  { q:"做事习惯？", a:"提前准备", b:"临时发挥", dim:3 },
+  { q:"生活更偏向？", a:"规律有序", b:"自由多变", dim:3 },
+  { q:"你讨厌？", a:"混乱无章", b:"被束缚", dim:3 },
+  { q:"你更像？", a:"规划控", b:"随性派", dim:3 },
+
+  // 维度5：人际 C / A (6题)
+  { q:"朋友数量？", a:"少但很深", b:"多但广泛", dim:4 },
+  { q:"社交偏好？", a:"小圈子", b:"大群体", dim:4 },
+  { q:"熟悉速度？", a:"慢热深交", b:"快速熟络", dim:4 },
+  { q:"你更适应？", a:"长久关系", b:"短暂相处", dim:4 },
+  { q:"你更愿意？", a:"知己一二", b:"朋友遍地", dim:4 },
+  { q:"社交态度？", a:"深度优先", b:"广度优先", dim:4 },
+
+  // 维度6：抗压 B / T (6题)
+  { q:"压力来时？", a:"立刻解决", b:"先缓一缓", dim:5 },
+  { q:"遇到困难？", a:"直面挑战", b:"回避缓冲", dim:5 },
+  { q:"焦虑时你？", a:"主动解决", b:"暂时逃避", dim:5 },
+  { q:"面对冲突？", a:"直接面对", b:"尽量避开", dim:5 },
+  { q:"压力下你？", a:"立刻行动", b:"需要休息", dim:5 },
+  { q:"挫折时你？", a:"迎难而上", b:"慢慢恢复", dim:5 }
+];
+
+// 计分：每个维度 0=S/R/L/P/C/B，1=Q/N/F/U/A/T
+const score = [0,0,0,0,0,0];
+const dimMap = [
+  ['S','Q'], ['R','N'], ['L','F'], ['P','U'], ['C','A'], ['B','T']
+];
+
+let step = 0;
+show();
+
+function show() {
+  const cur = questions[step];
+  document.getElementById("title").innerText = `题目 ${step+1} / 36`;
+  document.getElementById("q").innerText = cur.q;
+  document.querySelectorAll(".btn")[0].innerText = "A：" + cur.a;
+  document.querySelectorAll(".btn")[1].innerText = "B：" + cur.b;
+}
+
+function ans(choice) {
+  score[questions[step].dim] += choice;
+  step++;
+  if (step < 36) show();
+  else {
+    let result = '';
+    for (let i=0;i<6;i++) {
+      result += dimMap[i][score[i] >= 3 ? 1 : 0];
+    }
+    location.href = "result.html?type=" + result;
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>MJJTI · 你的人格报告</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{
+background:linear-gradient(135deg,#1a1a2e,#2c2c54);
+color:white;display:flex;justify-content:center;align-items:center;
+min-height:100vh;padding:20px;
+}
+.card{
+background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);
+padding:50px 35px;border-radius:24px;width:100%;max-width:550px;
+text-align:center;box-shadow:0 0 40px rgba(0,150,255,0.2);
+animation:fadeIn 1s;
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.9)}to{opacity:1}}
+.type{font-size:36px;color:#00f2fe;margin-bottom:12px}
+.name{font-size:22px;margin-bottom:20px}
+.desc{color:#ccc;line-height:1.7;margin-bottom:25px}
+.btn{
+background:linear-gradient(90deg,#4facfe,#00f2fe);
+color:white;border:none;padding:16px 24px;
+border-radius:14px;margin:6px;width:100%;
+cursor:pointer;transition:.3s;
+}
+.btn:hover{transform:scale(1.03)}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="type" id="type"></div>
+<div class="name" id="name"></div>
+<div class="desc" id="desc"></div>
+<button class="btn" onclick="share()">分享朋友圈</button>
+<button class="btn" onclick="location.href='index.html'">返回首页</button>
+</div>
+
+<script>
+const t = new URLSearchParams(location.search).get("type");
+document.getElementById("type").innerText = t;
+
+const data = {
+"SRLPCB":"务实领袖型","外向务实、理性规划、深度社交、直面压力，团队可靠核心",
+"SRLPCT":"务实温和型","外向务实、理性规划、圈子干净、压力下缓冲，踏实重感情",
+"SRLPAB":"社交实干型","外向务实、理性规划、广交朋友、直面压力，人脉广能力强",
+"SRLPAT":"社交稳重型","外向务实、理性规划、人脉多元、压力缓冲，稳重得体",
+"SRLUCB":"随性实干型","外向务实、理性随性、深度交友、直面压力，灵活靠谱",
+"SRLUCT":"随性温和型","外向务实、理性随性、圈子纯粹、压力回避，开朗佛系",
+"SRLUAB":"随性社交型","外向务实、理性随性、广结善缘、直面压力，洒脱高效",
+"SRLUAT":"随性稳重型","外向务实、理性随性、人脉宽广、压力缓冲，随和从容",
+"SRFPCB":"暖心务实型","外向务实、感性共情、深度交友、直面压力，温柔体贴",
+"SRFPCT":"温柔内敛型","外向务实、感性共情、圈子干净、压力缓冲，敏感真诚",
+"SRFPAB":"暖心社交型","外向务实、感性共情、广交朋友、直面压力，人缘极好",
+"SRFPAT":"温柔社交型","外向务实、感性共情、人脉多元、压力回避，友善讨喜",
+"SRFUCB":"随性暖心型","外向务实、感性随性、深度交友、直面压力，洒脱温柔",
+"SRFUCT":"随性温柔型","外向务实、感性随性、圈子简单、压力缓冲，开朗细腻",
+"SRFUAB":"随性暖心社交型","外向务实、感性随性、广交朋友、直面压力，活泼暖心",
+"SRFUAT":"随性温柔社交型","外向务实、感性随性、人脉广泛、压力回避，随和柔软",
+"SNLPCB":"理想领袖型","外向脑洞、理性规划、深度交友、直面压力，有格局有创意",
+"SNLPCT":"理想温和型","外向脑洞、理性规划、圈子纯粹、压力缓冲，温柔有想法",
+"SNLPAB":"创意社交型","外向脑洞、理性规划、广交朋友、直面压力，脑洞达人",
+"SNLPAT":"创意稳重型","外向脑洞、理性规划、人脉多元、压力缓冲，得体有创意",
+"SNLUCB":"随性理想型","外向脑洞、理性随性、深度交友、直面压力，洒脱有远见",
+"SNLUCT":"随性创意型","外向脑洞、理性随性、圈子简单、压力回避，自由创作者",
+"SNLUAB":"随性创意社交型","外向脑洞、理性随性、广交朋友、直面压力，活泼脑洞家",
+"SNLUAT":"随性创意稳重型","外向脑洞、理性随性、人脉宽广、压力缓冲，随和有想法",
+"SNFPCB":"暖心理想型","外向脑洞、感性共情、深度交友、直面压力，温柔有理想",
+"SNFUCT":"随性温柔理想型","外向脑洞、感性随性、圈子简单、压力缓冲，自由细腻",
+"QRLPCB":"内敛实干型","内向务实、理性规划、深度交友、直面压力，安静靠谱",
+"QRLPCT":"内敛稳重型","内向务实、理性规划、圈子极小、压力缓冲，低调踏实",
+"QRFUCB":"内敛随性暖心型","内向务实、感性随性、深度交友、直面压力，佛系温柔",
+"QNLPCB":"内敛理想领袖型","内向脑洞、理性规划、深度交友、直面压力，低调深度者",
+"QNFUAT":"内敛佛系敏感创意型","内向脑洞、感性随性、人脉简单、压力回避，佛系柔软"
+};
+
+const name = data[t]?t+" "+data[t].split("、")[0]:"未知人格";
+const desc = data[t]||"独特的你，拥有专属力量";
+document.getElementById("name").innerText=name;
+document.getElementById("desc").innerText=desc;
+
+function share(){
+alert("你的MJJTI人格："+t+"\n"+name+"\n\n长按图片保存分享朋友圈！");
+}
+</script>
+</body>
+</html>
